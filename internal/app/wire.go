@@ -5,12 +5,12 @@ package app
 
 import (
 	"github.com/google/wire"
-	"maxblog-me-template/internal/api"
-	"maxblog-me-template/internal/conf"
-	"maxblog-me-template/internal/core"
-	"maxblog-me-template/internal/middleware/interceptor"
-	dataHandler "maxblog-me-template/src/handler"
-	dataService "maxblog-me-template/src/service"
+	"maxblog-me-admin/internal/api"
+	"maxblog-me-admin/internal/conf"
+	"maxblog-me-admin/internal/core"
+	"maxblog-me-admin/internal/middleware/interceptor"
+	dataHandler "maxblog-me-admin/src/handler"
+	dataService "maxblog-me-admin/src/service"
 )
 
 func InitInjector() (*Injector, error) {

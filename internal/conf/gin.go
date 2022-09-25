@@ -3,7 +3,7 @@ package conf
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattn/go-colorable"
-	"maxblog-me-template/internal/api"
+	"maxblog-me-admin/internal/api"
 )
 
 func init() {

@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	logger "github.com/sirupsen/logrus"
-	"maxblog-me-template/internal/conf"
-	"maxblog-me-template/internal/core"
+	"maxblog-me-admin/internal/conf"
+	"maxblog-me-admin/internal/core"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,8 +34,8 @@ func InitConfig(opts *options) {
 	logger.WithFields(logger.Fields{
 		"path": opts.ConfigFile,
 	}).Info(core.FormatInfo(101))
-	core.SetUpstreamAddr(cfg.Upstream.MaxblogFETemplate.Host, cfg.Upstream.MaxblogFETemplate.Port)
-	core.SetDownstreamAddr(cfg.Downstream.MaxblogBETemplate.Host, cfg.Downstream.MaxblogBETemplate.Port)
+	core.SetUpstreamAddr(cfg.Upstream.MaxblogFEAdmin.Host, cfg.Upstream.MaxblogFEAdmin.Port)
+	core.SetDownstreamAddr(cfg.Downstream.MaxblogBEDemo.Host, cfg.Downstream.MaxblogBEDemo.Port)
 }
 
 func InitServer(ctx context.Context, handler http.Handler) func() {

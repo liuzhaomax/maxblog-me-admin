@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"maxblog-me-template/internal/app"
-	"maxblog-me-template/internal/cmd/env"
+	"maxblog-me-admin/internal/app"
+	"maxblog-me-admin/internal/cmd/env"
 )
 
 func main() {

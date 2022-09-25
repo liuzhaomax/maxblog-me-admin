@@ -3,9 +3,9 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"maxblog-me-template/internal/core"
-	"maxblog-me-template/src/service"
-	"maxblog-me-template/src/utils"
+	"maxblog-me-admin/internal/core"
+	"maxblog-me-admin/src/service"
+	"maxblog-me-admin/src/utils"
 	"net/http"
 )
 

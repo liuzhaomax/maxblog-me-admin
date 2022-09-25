@@ -3,7 +3,7 @@ package conf
 import (
 	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"maxblog-me-template/internal/core"
+	"maxblog-me-admin/internal/core"
 	"sync"
 )
 
@@ -46,11 +46,11 @@ type Server struct {
 }
 
 type Downstream struct {
-	MaxblogBETemplate Address `mapstructure:"maxblog_be_template" json:"maxblog_be_template"`
+	MaxblogBEDemo Address `mapstructure:"maxblog_be_demo" json:"maxblog_be_demo"`
 }
 
 type Upstream struct {
-	MaxblogFETemplate Address `mapstructure:"maxblog_fe_template" json:"maxblog_fe_template"`
+	MaxblogFEAdmin Address `mapstructure:"maxblog_fe_admin" json:"maxblog_fe_admin"`
 }
 
 type Address struct {

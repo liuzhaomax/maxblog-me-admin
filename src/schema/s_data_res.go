@@ -1,6 +1,6 @@
 package schema
 
-import "maxblog-me-template/src/pb"
+import "maxblog-me-admin/src/pb"
 
 type DataRes struct {
 	Mobile string `json:"mobile"`

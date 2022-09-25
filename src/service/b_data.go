@@ -6,9 +6,9 @@ import (
 	"github.com/google/wire"
 	logger "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"maxblog-me-template/internal/core"
-	"maxblog-me-template/src/pb"
-	"maxblog-me-template/src/schema"
+	"maxblog-me-admin/internal/core"
+	"maxblog-me-admin/src/pb"
+	"maxblog-me-admin/src/schema"
 )
 
 var DataSet = wire.NewSet(wire.Struct(new(BData), "*"))

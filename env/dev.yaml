@@ -3,26 +3,26 @@ logger:
   color: true
 
 app:
-  app_name: "maxblog-me-template"
+  app_name: "maxblog-me-admin"
   version: "0.1.0"
 
 server:
   host: "127.0.0.1"
-  port: 9200
+  port: 9201
   shutdown_timeout: 10
   tags:
-    - maxblog-me-template
+    - maxblog-me-admin
     - maxblog
 
 upstream:
-  maxblog_fe_template:
+  maxblog_fe_admin:
     host: "127.0.0.1"
-    port: 9100
+    port: 9102
 
 downstream:
-  maxblog_be_template:
+  maxblog_be_demo:
     host: "127.0.0.1"
-    port: 9300
+    port: 9304
 
 redis:
   host: "127.0.0.1"

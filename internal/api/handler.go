@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	dataHandler "maxblog-me-template/src/handler"
+	dataHandler "maxblog-me-admin/src/handler"
 )
 
 var APISet = wire.NewSet(wire.Struct(new(Handler), "*"), wire.Bind(new(IHandler), new(*Handler)))

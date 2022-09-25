@@ -33,11 +33,11 @@ type Context struct {
 }
 
 type Upstream struct {
-	MaxblogFETemplate Address
+	MaxblogFEAdmin Address
 }
 
 type Downstream struct {
-	MaxblogBETemplate Address
+	MaxblogBEDemo Address
 }
 
 type Address struct {
@@ -46,21 +46,21 @@ type Address struct {
 }
 
 func SetUpstreamAddr(host string, port int) {
-	ctx.Upstream.MaxblogFETemplate.Host = host
-	ctx.Upstream.MaxblogFETemplate.Port = port
+	ctx.Upstream.MaxblogFEAdmin.Host = host
+	ctx.Upstream.MaxblogFEAdmin.Port = port
 }
 
 func GetUpstreamAddr() string {
-	return fmt.Sprintf("%s:%d", ctx.Upstream.MaxblogFETemplate.Host, ctx.Upstream.MaxblogFETemplate.Port)
+	return fmt.Sprintf("%s:%d", ctx.Upstream.MaxblogFEAdmin.Host, ctx.Upstream.MaxblogFEAdmin.Port)
 }
 
 func SetDownstreamAddr(host string, port int) {
-	ctx.Downstream.MaxblogBETemplate.Host = host
-	ctx.Downstream.MaxblogBETemplate.Port = port
+	ctx.Downstream.MaxblogBEDemo.Host = host
+	ctx.Downstream.MaxblogBEDemo.Port = port
 }
 
 func GetDownstreamMaxblogBETemplateAddr() string {
-	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBETemplate.Host, ctx.Downstream.MaxblogBETemplate.Port)
+	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEDemo.Host, ctx.Downstream.MaxblogBEDemo.Port)
 }
 
 func GetProjectPath() string {

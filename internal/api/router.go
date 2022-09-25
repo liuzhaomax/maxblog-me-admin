@@ -2,8 +2,8 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	mw "maxblog-me-template/internal/middleware"
-	dataRouter "maxblog-me-template/src/router"
+	mw "maxblog-me-admin/internal/middleware"
+	dataRouter "maxblog-me-admin/src/router"
 	"net/http"
 )
 

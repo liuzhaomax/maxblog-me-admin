@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io"
-	"maxblog-me-template/internal/core"
+	"maxblog-me-admin/internal/core"
 	"os"
 	"time"
 )
