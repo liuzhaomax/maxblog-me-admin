@@ -1,0 +1,34 @@
+run_mode: "debug"
+logger:
+  color: true
+
+app:
+  app_name: "maxblog-me-template"
+  version: "0.1.0"
+
+server:
+  host: "127.0.0.1"
+  port: 9200
+  shutdown_timeout: 10
+  tags:
+    - maxblog-me-template
+    - maxblog
+
+upstream:
+  maxblog_fe_template:
+    host: "127.0.0.1"
+    port: 9100
+
+downstream:
+  maxblog_be_template:
+    host: "127.0.0.1"
+    port: 9300
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+
+consul:
+  host: "127.0.0.1"
+  port: 8500
+
