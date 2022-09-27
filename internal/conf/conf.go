@@ -46,6 +46,7 @@ type Server struct {
 }
 
 type Downstream struct {
+	MaxblogBEUser Address `mapstructure:"maxblog_be_user" json:"maxblog_be_user"`
 	MaxblogBEDemo Address `mapstructure:"maxblog_be_demo" json:"maxblog_be_demo"`
 }
 

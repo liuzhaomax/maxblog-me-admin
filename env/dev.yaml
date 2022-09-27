@@ -20,6 +20,9 @@ upstream:
     port: 9102
 
 downstream:
+  maxblog_be_user:
+    host: "127.0.0.1"
+    port: 9301
   maxblog_be_demo:
     host: "127.0.0.1"
     port: 9304

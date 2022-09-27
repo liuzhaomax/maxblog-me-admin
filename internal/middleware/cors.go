@@ -10,6 +10,7 @@ import (
 func Cors() gin.HandlerFunc {
 	var corsWhiteList = []string{
 		fmt.Sprintf("http://%s", core.GetUpstreamAddr()),
+		fmt.Sprintf("http://%s", "127.0.0.1:3000"), // TODO for st env
 	}
 	return func(ctx *gin.Context) {
 		if core.In(corsWhiteList, ctx.Request.Header.Get("Origin")) {

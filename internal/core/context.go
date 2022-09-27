@@ -37,6 +37,7 @@ type Upstream struct {
 }
 
 type Downstream struct {
+	MaxblogBEUser Address
 	MaxblogBEDemo Address
 }
 
@@ -54,12 +55,21 @@ func GetUpstreamAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Upstream.MaxblogFEAdmin.Host, ctx.Upstream.MaxblogFEAdmin.Port)
 }
 
-func SetDownstreamAddr(host string, port int) {
+func SetDownstreamBEUserAddr(host string, port int) {
+	ctx.Downstream.MaxblogBEUser.Host = host
+	ctx.Downstream.MaxblogBEUser.Port = port
+}
+
+func GetDownstreamBEUserAddr() string {
+	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEUser.Host, ctx.Downstream.MaxblogBEUser.Port)
+}
+
+func SetDownstreamBEDemoAddr(host string, port int) {
 	ctx.Downstream.MaxblogBEDemo.Host = host
 	ctx.Downstream.MaxblogBEDemo.Port = port
 }
 
-func GetDownstreamMaxblogBETemplateAddr() string {
+func GetDownstreamBEDemoAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEDemo.Host, ctx.Downstream.MaxblogBEDemo.Port)
 }
 

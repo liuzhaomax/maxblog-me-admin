@@ -35,7 +35,8 @@ func InitConfig(opts *options) {
 		"path": opts.ConfigFile,
 	}).Info(core.FormatInfo(101))
 	core.SetUpstreamAddr(cfg.Upstream.MaxblogFEAdmin.Host, cfg.Upstream.MaxblogFEAdmin.Port)
-	core.SetDownstreamAddr(cfg.Downstream.MaxblogBEDemo.Host, cfg.Downstream.MaxblogBEDemo.Port)
+	core.SetDownstreamBEUserAddr(cfg.Downstream.MaxblogBEUser.Host, cfg.Downstream.MaxblogBEUser.Port)
+	core.SetDownstreamBEDemoAddr(cfg.Downstream.MaxblogBEDemo.Host, cfg.Downstream.MaxblogBEDemo.Port)
 }
 
 func InitServer(ctx context.Context, handler http.Handler) func() {
