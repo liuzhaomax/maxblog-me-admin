@@ -11,12 +11,12 @@ import (
 	"maxblog-me-admin/src/schema"
 )
 
-var DataSet = wire.NewSet(wire.Struct(new(BData), "*"))
+var UserSet = wire.NewSet(wire.Struct(new(BUser), "*"))
 
-type BData struct{}
+type BUser struct{}
 
-func (b *BData) GetDataById(c *gin.Context, id uint32) (*schema.DataRes, error) {
-	addr := core.GetDownstreamMaxblogBETemplateAddr()
+func (bUser *BUser) GetUserById(c *gin.Context, id uint32) (*schema.UserRes, error) {
+	addr := core.GetDownstreamBEUserAddr()
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		logger.WithFields(logger.Fields{
@@ -24,8 +24,8 @@ func (b *BData) GetDataById(c *gin.Context, id uint32) (*schema.DataRes, error) 
 		}).Fatal(core.FormatError(300, err).Error())
 		return nil, err
 	}
-	client := pb.NewDataServiceClient(conn)
-	pbRes, err := client.GetDataById(context.Background(), &pb.IdRequest{Id: id})
+	client := pb.NewUserServiceClient(conn)
+	pbRes, err := client.GetUserById(context.Background(), &pb.IdRequest{Id: id})
 	if err != nil {
 		return nil, err
 	}

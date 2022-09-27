@@ -3,13 +3,13 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	dataHandler "maxblog-me-admin/src/handler"
+	srcHandler "maxblog-me-admin/src/handler"
 )
 
 var APISet = wire.NewSet(wire.Struct(new(Handler), "*"), wire.Bind(new(IHandler), new(*Handler)))
 
 type Handler struct {
-	HandlerData *dataHandler.HData
+	HandlerUser *srcHandler.HUser
 }
 
 type IHandler interface {

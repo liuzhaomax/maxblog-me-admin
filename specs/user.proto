@@ -1,0 +1,30 @@
+syntax="proto3";
+
+option go_package="/pb";
+
+service UserService {
+    rpc GetUserById(IdRequest) returns (UserRes);
+    rpc PostLogin(LoginRequest) returns (LoginRes);
+}
+
+message IdRequest {
+    uint32 id=1;
+}
+
+message UserRes {
+    uint32 id=1;
+    string mobile=2;
+    string password=3;
+    string nickName=4;
+    string salt=5;
+    uint32 role=6;
+}
+
+message LoginRequest {
+    string mobile=1;
+    string password=2;
+}
+
+message LoginRes {
+    bool result=1;
+}

@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	mw "maxblog-me-admin/internal/middleware"
-	dataRouter "maxblog-me-admin/src/router"
+	srcRouter "maxblog-me-admin/src/router"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ func (handler *Handler) RegisterRouter(app *gin.Engine) {
 	router := app.Group("")
 	{
 		router.StaticFS("/static", http.Dir("./static"))
-		dataRouter.RegisterRouter(handler.HandlerData, router)
+		srcRouter.RegisterRouter(handler.HandlerUser, router)
 	}
 }
 

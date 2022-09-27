@@ -2,12 +2,12 @@ package schema
 
 import "maxblog-me-admin/src/pb"
 
-type DataRes struct {
+type UserRes struct {
 	Mobile string `json:"mobile"`
 }
 
-func Pb2Res(dataRes *pb.DataRes) DataRes {
-	return DataRes{
+func Pb2Res(dataRes *pb.UserRes) UserRes {
+	return UserRes{
 		Mobile: dataRes.Mobile,
 	}
 }
