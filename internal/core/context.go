@@ -33,7 +33,7 @@ type Context struct {
 }
 
 type Upstream struct {
-	MaxblogFEAdmin Address
+	MaxblogFEAdmin AddressHttp
 }
 
 type Downstream struct {
@@ -46,27 +46,28 @@ type Address struct {
 	Port int
 }
 
-func SetUpstreamAddr(host string, port int) {
-	ctx.Upstream.MaxblogFEAdmin.Host = host
-	ctx.Upstream.MaxblogFEAdmin.Port = port
+type AddressHttp struct {
+	Protocol string
+	Domain   string
+	Host     string
+	Port     int
+	Secure   bool
 }
 
 func GetUpstreamAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Upstream.MaxblogFEAdmin.Host, ctx.Upstream.MaxblogFEAdmin.Port)
 }
 
-func SetDownstreamBEUserAddr(host string, port int) {
-	ctx.Downstream.MaxblogBEUser.Host = host
-	ctx.Downstream.MaxblogBEUser.Port = port
+func GetUpstreamDomain() string {
+	return fmt.Sprintf("%s://%s", ctx.Upstream.MaxblogFEAdmin.Protocol, ctx.Upstream.MaxblogFEAdmin.Domain)
 }
 
-func GetDownstreamBEUserAddr() string {
+func GetUpstreamSecure() bool {
+	return ctx.Upstream.MaxblogFEAdmin.Secure
+}
+
+func GetDownstreamMaxblogBEUserAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEUser.Host, ctx.Downstream.MaxblogBEUser.Port)
-}
-
-func SetDownstreamBEDemoAddr(host string, port int) {
-	ctx.Downstream.MaxblogBEDemo.Host = host
-	ctx.Downstream.MaxblogBEDemo.Port = port
 }
 
 func GetDownstreamBEDemoAddr() string {
@@ -91,4 +92,13 @@ func GetPublicKeyStr() string {
 
 func GetPrivateKey() *rsa.PrivateKey {
 	return GetInstanceOfContext().PrivateKey
+}
+
+func SetKeys() {
+	GetInstanceOfContext().JWTSecret = "liuzhao"
+	prk, puk, _ := GenRsaKeyPair(2048)
+	GetInstanceOfContext().PublicKey = puk
+	GetInstanceOfContext().PrivateKey = prk
+	publicKeyStr, _ := PublicKeyToString()
+	GetInstanceOfContext().PublicKeyStr = publicKeyStr
 }

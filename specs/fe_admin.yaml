@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: Maxblog Admin API
+  description: |-
+    Maxblog后台API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: user
+    description: 后台用户相关API
+paths:
+  /login:
+    get:
+      tags:
+        - user
+      description: GET 公钥
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicKey'
+        500:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Http500Response'
+  /login/:
+    post:
+      tags:
+        - user
+      description: POST 登录
+      requestBody:
+        $ref: '#/components/requestBodies/LoginDetails'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRes'
+        500:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Http500Response'
+
+components:
+  schemas:
+    PublicKey:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        data:
+          type: string
+          example: JOE3LW7PcZX1advIJo3jc9
+    LoginDetails:
+      type: object
+      properties:
+        mobile:
+          type: string
+          example: 130123456789
+        password:
+          type: string
+          example: 1advIJo3jc9JOE3LW7PcZX
+    LoginRes:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 0
+        desc:
+          type: string
+          example: success
+    Http500Response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: int32
+              example: 999
+            desc:
+              type: string
+              example: null
+
+  requestBodies:
+    LoginDetails:
+      description: 登录请求信息
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginDetails'
+
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

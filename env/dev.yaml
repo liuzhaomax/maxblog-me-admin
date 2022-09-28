@@ -16,8 +16,11 @@ server:
 
 upstream:
   maxblog_fe_admin:
+    protocol: "http"
+    domain: "127.0.0.1:9102"
     host: "127.0.0.1"
     port: 9102
+    secure: false
 
 downstream:
   maxblog_be_user:

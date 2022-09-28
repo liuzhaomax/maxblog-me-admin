@@ -6,7 +6,13 @@ import (
 )
 
 func RegisterRouter(handler *handler.HUser, group *gin.RouterGroup) {
-	routerUser := group.Group("")
+	routerIndex := group.Group("")
+	{
+		routerIndex.GET("/", handler.GetIndex)
+		routerIndex.GET("/login", handler.GetPuk)
+		routerIndex.POST("/login", handler.PostLogin)
+	}
+	routerUser := group.Group("/user")
 	{
 		routerUser.GET("/:id", handler.GetUserById)
 	}
