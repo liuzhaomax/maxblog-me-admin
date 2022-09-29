@@ -6,8 +6,8 @@ import (
 	"maxblog-me-admin/src/handler"
 )
 
-func RegisterRouter(handler *handler.HUser, group *gin.RouterGroup) {
-	routerIndex := group.Group("")
+func RegisterRouter(handler *handler.HUser, app *gin.Engine, itcpt *interceptor.Interceptor) {
+	routerIndex := app.Group("")
 	{
 		routerIndex.GET("/", handler.GetIndex)
 		routerIndex.GET("/login", handler.GetPuk)
@@ -15,13 +15,16 @@ func RegisterRouter(handler *handler.HUser, group *gin.RouterGroup) {
 		routerIndex.DELETE("/logout", handler.DeleteLogout)
 	}
 
-	itcpt := interceptor.GetInstanceOfContext()
-
-	routerUser := group.Group("/user")
+	routerHome := app.Group("")
 	{
-		routerUser.Use(itcpt.CheckTokens())
+		routerHome.Use(itcpt.InterceptorAuth.CheckTokens())
+		routerHome.GET("/home", handler.GetHome)
+	}
 
-		routerUser.GET("/:id", handler.GetUserById)
-		routerUser.POST("", handler.PostUser)
+	routerUser := app.Group("")
+	{
+		routerUser.Use(itcpt.InterceptorAuth.CheckTokens())
+		routerUser.GET("/user/:id", handler.GetUserById)
+		routerUser.POST("/user", handler.PostUser)
 	}
 }

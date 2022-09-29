@@ -39,13 +39,13 @@ func (hUser *HUser) PostLogin(c *gin.Context) {
 		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusUnauthorized, core.FormatError(200, err))
 		return
 	}
-	cipherToken, mobile, err := hUser.BUser.SetLoginCookie(c, &loginInfo)
+	b64Token, mobile, err := hUser.BUser.SetLoginCookie(c, &loginInfo)
 	if err != nil {
 		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusInternalServerError, core.FormatError(200, err))
 		return
 	}
 	logger.WithFields(logger.Fields{"用户": mobile}).Info(core.FormatInfo(108))
-	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, cipherToken)
+	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, b64Token)
 }
 
 func (hUser *HUser) GetUserById(c *gin.Context) {
@@ -86,5 +86,9 @@ func (hUser *HUser) DeleteLogout(c *gin.Context) {
 		return
 	}
 	logger.WithFields(logger.Fields{"用户": mobile}).Info(core.FormatInfo(109))
+	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": "ok"})
+}
+
+func (hUser *HUser) GetHome(c *gin.Context) {
 	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": "ok"})
 }

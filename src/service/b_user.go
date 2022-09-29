@@ -57,18 +57,19 @@ func (bUser *BUser) SetLoginCookie(c *gin.Context, loginInfo *schema.LoginInfo) 
 	if err != nil {
 		return EmptyStr, EmptyStr, err
 	}
+	b64Token := core.BASE64EncodeStr(cipherToken)
 	targetDomain := core.GetUpstreamDomain()
 	secure := core.GetUpstreamSecure()
 	durationInt := int(duration) / int(math.Pow10(9))
 	c.SetCookie(
 		"TOKEN",
-		cipherToken,
+		b64Token,
 		durationInt,
 		"/",
 		targetDomain,
 		secure,
 		true)
-	return cipherToken, mobile, nil
+	return b64Token, mobile, nil
 }
 
 func (bUser *BUser) GetUserById(c *gin.Context, id uint32) (*schema.UserRes, error) {
@@ -129,9 +130,13 @@ func (bUser *BUser) CreateUser(c *gin.Context, userReq *schema.UserReq) (bool, s
 
 func (bUser *BUser) ClearLoginCookie(c *gin.Context) (string, error) {
 	j := core.NewJWT()
-	token, err := c.Cookie("TOKEN")
+	b64token, err := c.Cookie("TOKEN")
 	if err != nil {
 		return EmptyStr, core.FormatError(208, err)
+	}
+	token, err := core.BASE64DecodeStr(b64token)
+	if err != nil {
+		return EmptyStr, core.FormatError(202, err)
 	}
 	decryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), token)
 	if err != nil {

@@ -18,6 +18,7 @@ func InitInjector() (*Injector, error) {
 		conf.InitGinEngine,
 		api.APISet,
 		interceptor.InterceptorSet,
+		interceptor.AuthSet,
 		core.ResponseSet,
 		core.LoggerSet,
 		handler.HandlerSet,
