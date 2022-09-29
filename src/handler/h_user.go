@@ -76,5 +76,15 @@ func (hUser *HUser) PostUser(c *gin.Context) {
 		return
 	}
 	logger.WithFields(logger.Fields{"用户": mobile}).Info(core.FormatInfo(108))
-	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"result": success})
+	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": success})
+}
+
+func (hUser *HUser) DeleteLogout(c *gin.Context) {
+	mobile, err := hUser.BUser.ClearLoginCookie(c)
+	if err != nil {
+		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusInternalServerError, core.FormatError(207, err))
+		return
+	}
+	logger.WithFields(logger.Fields{"用户": mobile}).Info(core.FormatInfo(109))
+	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": "ok"})
 }

@@ -44,7 +44,8 @@ func (bUser *BUser) ValidateLoginInfo(c *gin.Context, loginInfo *schema.LoginInf
 	if err != nil {
 		return err
 	}
-	if pbRes.Result == false {
+	check := core.VerifyEncodedPwd(password, pbRes.Salt, pbRes.EncodedPwd)
+	if check == false {
 		return core.FormatError(200, nil)
 	}
 	return nil
@@ -97,7 +98,7 @@ func (bUser *BUser) CreateUser(c *gin.Context, userReq *schema.UserReq) (bool, s
 	if err != nil {
 		return false, EmptyStr, core.FormatError(202, err)
 	}
-	salt, encodedPwd := encodePwd(password)
+	salt, encodedPwd := core.GetEncodedPwd(password)
 	if userReq.NickName == "" {
 		userReq.NickName = utils.GenCNName()
 	}
@@ -124,4 +125,31 @@ func (bUser *BUser) CreateUser(c *gin.Context, userReq *schema.UserReq) (bool, s
 		return false, EmptyStr, core.FormatError(997, nil)
 	}
 	return pbRes.Result, mobile, nil
+}
+
+func (bUser *BUser) ClearLoginCookie(c *gin.Context) (string, error) {
+	j := core.NewJWT()
+	token, err := c.Cookie("TOKEN")
+	if err != nil {
+		return EmptyStr, core.FormatError(208, err)
+	}
+	decryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), token)
+	if err != nil {
+		return EmptyStr, core.FormatError(202, err)
+	}
+	parsedToken, err := j.ParseToken(decryptedToken)
+	if err != nil {
+		return EmptyStr, core.FormatError(202, err)
+	}
+	targetDomain := core.GetUpstreamDomain()
+	secure := core.GetUpstreamSecure()
+	c.SetCookie(
+		"TOKEN",
+		"",
+		1,
+		"/",
+		targetDomain,
+		secure,
+		true)
+	return parsedToken, nil
 }

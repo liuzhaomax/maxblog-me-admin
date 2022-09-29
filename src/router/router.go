@@ -12,6 +12,7 @@ func RegisterRouter(handler *handler.HUser, group *gin.RouterGroup) {
 		routerIndex.GET("/", handler.GetIndex)
 		routerIndex.GET("/login", handler.GetPuk)
 		routerIndex.POST("/login", handler.PostLogin)
+		routerIndex.DELETE("/logout", handler.DeleteLogout)
 	}
 
 	itcpt := interceptor.GetInstanceOfContext()

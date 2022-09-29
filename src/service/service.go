@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/anaskhan96/go-password-encoder"
 	"github.com/google/wire"
 	"maxblog-me-admin/internal/core"
 	"time"
@@ -30,10 +29,4 @@ func genToken(encryptedMobile string, duration time.Duration) (string, string, e
 		return EmptyStr, EmptyStr, core.FormatError(204, err)
 	}
 	return cipherToken, mobile, nil
-}
-
-func encodePwd(pwd string) (string, string) {
-	ctx := core.GetInstanceOfContext()
-	salt, encodedPwd := password.Encode(pwd, ctx.PwdEncodingOpts)
-	return salt, encodedPwd
 }

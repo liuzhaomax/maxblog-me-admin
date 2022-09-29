@@ -25,7 +25,8 @@ message LoginRequest {
 }
 
 message LoginRes {
-    bool result=1;
+    string encodedPwd=1;
+    string salt=2;
 }
 
 message CreateUserRequest {
