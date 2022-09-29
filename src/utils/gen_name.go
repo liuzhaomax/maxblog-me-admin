@@ -51,8 +51,9 @@ func GenCNName() string {
 	rand.Seed(time.Now().UnixNano())
 	var first string
 	// 随机产生2位或者3位的姓名
-	for i := 0; i <= rand.Intn(1); i++ {
-		first = fmt.Sprint(firstName[rand.Intn(firstNameLen-1)])
+	for i := 0; i <= rand.Intn(2); i++ {
+		first = fmt.Sprint(first, firstName[rand.Intn(firstNameLen)])
 	}
-	return fmt.Sprintf("%s%s", fmt.Sprint(lastName[rand.Intn(lastNameLen-1)]), first)
+	last := fmt.Sprint(lastName[rand.Intn(lastNameLen)])
+	return fmt.Sprint(last, first)
 }
