@@ -1,7 +1,6 @@
 package service
 
 import (
-	"crypto/md5"
 	"github.com/anaskhan96/go-password-encoder"
 	"github.com/google/wire"
 	"maxblog-me-admin/internal/core"
@@ -34,12 +33,7 @@ func genToken(encryptedMobile string, duration time.Duration) (string, string, e
 }
 
 func encodePwd(pwd string) (string, string) {
-	options := password.Options{
-		SaltLen:      16,
-		Iterations:   64,
-		KeyLen:       16,
-		HashFunction: md5.New,
-	}
-	salt, encodedPwd := password.Encode(pwd, &options)
+	ctx := core.GetInstanceOfContext()
+	salt, encodedPwd := password.Encode(pwd, ctx.PwdEncodingOpts)
 	return salt, encodedPwd
 }

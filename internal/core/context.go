@@ -1,8 +1,10 @@
 package core
 
 import (
+	"crypto/md5"
 	"crypto/rsa"
 	"fmt"
+	"github.com/anaskhan96/go-password-encoder"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -24,12 +26,13 @@ func GetInstanceOfContext() *Context {
 }
 
 type Context struct {
-	Upstream     Upstream
-	Downstream   Downstream
-	JWTSecret    string
-	PrivateKey   *rsa.PrivateKey
-	PublicKey    *rsa.PublicKey
-	PublicKeyStr string
+	Upstream        Upstream
+	Downstream      Downstream
+	JWTSecret       string
+	PwdEncodingOpts *password.Options
+	PrivateKey      *rsa.PrivateKey
+	PublicKey       *rsa.PublicKey
+	PublicKeyStr    string
 }
 
 type Upstream struct {
@@ -83,22 +86,34 @@ func GetProjectPath() string {
 }
 
 func GetPublicKey() *rsa.PublicKey {
-	return GetInstanceOfContext().PublicKey
+	return ctx.PublicKey
 }
 
 func GetPublicKeyStr() string {
-	return GetInstanceOfContext().PublicKeyStr
+	return ctx.PublicKeyStr
 }
 
 func GetPrivateKey() *rsa.PrivateKey {
-	return GetInstanceOfContext().PrivateKey
+	return ctx.PrivateKey
 }
 
 func SetKeys() {
-	GetInstanceOfContext().JWTSecret = "liuzhaomax"
 	prk, puk, _ := GenRsaKeyPair(2048)
-	GetInstanceOfContext().PublicKey = puk
-	GetInstanceOfContext().PrivateKey = prk
+	ctx.PublicKey = puk
+	ctx.PrivateKey = prk
 	publicKeyStr, _ := PublicKeyToString()
-	GetInstanceOfContext().PublicKeyStr = publicKeyStr
+	ctx.PublicKeyStr = publicKeyStr
+}
+
+func SetJWTSecret(jwtSecret string) {
+	ctx.JWTSecret = jwtSecret
+}
+
+func SetPwdEncodingOpts() {
+	ctx.PwdEncodingOpts = &password.Options{
+		SaltLen:      16,
+		Iterations:   64,
+		KeyLen:       16,
+		HashFunction: md5.New,
+	}
 }
