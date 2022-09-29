@@ -3,11 +3,17 @@ package schema
 import "maxblog-me-admin/src/pb"
 
 type UserRes struct {
-	Mobile string `json:"mobile"`
+	Id       uint32 `json:"id"`
+	Mobile   string `json:"mobile"`
+	NickName string `json:"nickName"`
+	Role     uint32 `json:"role"`
 }
 
-func Pb2Res(dataRes *pb.UserRes) UserRes {
+func Pb2UserRes(userRes *pb.UserRes) UserRes {
 	return UserRes{
-		Mobile: dataRes.Mobile,
+		Id:       userRes.Id,
+		Mobile:   userRes.Mobile,
+		NickName: userRes.NickName,
+		Role:     userRes.Role,
 	}
 }

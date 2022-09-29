@@ -39,12 +39,7 @@ func (hUser *HUser) PostLogin(c *gin.Context) {
 		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusUnauthorized, core.FormatError(200, err))
 		return
 	}
-	err = hUser.BUser.SetLoginCookie(c, &loginInfo)
-	if err != nil {
-		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusUnauthorized, core.FormatError(200, err))
-		return
-	}
-	cipherToken, mobile, err := hUser.BUser.SetLoginJWT(c, &loginInfo)
+	cipherToken, mobile, err := hUser.BUser.SetLoginCookie(c, &loginInfo)
 	if err != nil {
 		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusInternalServerError, core.FormatError(200, err))
 		return
@@ -66,4 +61,20 @@ func (hUser *HUser) GetUserById(c *gin.Context) {
 		return
 	}
 	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, dataRes)
+}
+
+func (hUser *HUser) PostUser(c *gin.Context) {
+	var userReq schema.UserReq
+	err := c.ShouldBind(&userReq)
+	if err != nil {
+		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusBadRequest, core.FormatError(201, err))
+		return
+	}
+	success, mobile, err := hUser.BUser.CreateUser(c, &userReq)
+	if err != nil || success != true {
+		hUser.IRes.ResFailure(c, core.GetFuncName(), http.StatusInternalServerError, core.FormatError(205, err))
+		return
+	}
+	logger.WithFields(logger.Fields{"用户": mobile}).Info(core.FormatInfo(108))
+	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"result": success})
 }

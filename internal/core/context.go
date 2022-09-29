@@ -70,7 +70,7 @@ func GetDownstreamMaxblogBEUserAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEUser.Host, ctx.Downstream.MaxblogBEUser.Port)
 }
 
-func GetDownstreamBEDemoAddr() string {
+func GetDownstreamMaxblogBEDemoAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEDemo.Host, ctx.Downstream.MaxblogBEDemo.Port)
 }
 
@@ -95,7 +95,7 @@ func GetPrivateKey() *rsa.PrivateKey {
 }
 
 func SetKeys() {
-	GetInstanceOfContext().JWTSecret = "liuzhao"
+	GetInstanceOfContext().JWTSecret = "liuzhaomax"
 	prk, puk, _ := GenRsaKeyPair(2048)
 	GetInstanceOfContext().PublicKey = puk
 	GetInstanceOfContext().PrivateKey = prk

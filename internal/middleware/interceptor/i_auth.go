@@ -1,7 +1,10 @@
 package interceptor
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"maxblog-me-admin/internal/core"
+	"net/http"
 	"sync"
 )
 
@@ -20,24 +23,67 @@ func GetInstanceOfContext() *Interceptor {
 	return interceptor
 }
 
-type Interceptor struct{}
+type Interceptor struct {
+	ILogger core.ILogger
+}
 
-// emails in tokens need to be equal
-//func (inter *Interceptor) CheckTwoTokens() gin.HandlerFunc {
-//	return func(ctx *gin.Context) {
-//		// token in req header
-//		headerToken := ctx.Request.Header.Get("Authorization")
-//		headerToken, _ = core.RSADecrypt(core.GetPrivateKey(), headerToken)
-//		headerTokenEmail, _ := core.ParseToken(headerToken)
-//		headerTokenEmail = strings.Split(headerTokenEmail, "|")[0]
-//		// token in req cookie
-//		cookieToken, _ := ctx.Cookie("TOKEN")
-//		cookieToken, _ = core.RSADecrypt(core.GetPrivateKey(), cookieToken)
-//		cookieTokenEmail, _ := core.ParseToken(cookieToken)
-//		// checking tokens info
-//		if headerTokenEmail != cookieTokenEmail || headerTokenEmail == "" || cookieTokenEmail == "" {
-//			ctx.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(200, nil))
-//		}
-//		ctx.Next()
-//	}
-//}
+func (itcpt *Interceptor) CheckTokens() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		j := core.NewJWT()
+		// token in req header
+		headerToken := c.Request.Header.Get("Authorization")
+		if headerToken == "" || len(headerToken) == 0 {
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, nil))
+			return
+		}
+		headerDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), headerToken)
+		if err != nil {
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		headerParsedToken, err := j.ParseToken(headerDecryptedToken)
+		if err != nil {
+			if err.Error() == core.TokenExpired {
+				itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+				return
+			}
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		// token in req cookie
+		cookieToken, err := c.Cookie("TOKEN")
+		if cookieToken == "" || len(cookieToken) == 0 {
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		cookieDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), cookieToken)
+		if err != nil {
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		cookieParsedToken, err := j.ParseToken(cookieDecryptedToken)
+		if err != nil {
+			if err.Error() == core.TokenExpired {
+				itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+				return
+			}
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		// checking tokens info
+		if headerParsedToken != cookieParsedToken {
+			itcpt.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, nil))
+			return
+		}
+		c.Next()
+	}
+}
