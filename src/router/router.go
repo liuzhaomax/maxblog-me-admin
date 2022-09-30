@@ -18,6 +18,7 @@ func RegisterRouter(handler *handler.HUser, app *gin.Engine, itcpt *interceptor.
 	{
 		routerMaxBlog.Use(itcpt.InterceptorAuth.CheckTokens())
 
+		// TODO 使用其他微服务
 		routerHome := routerMaxBlog.Group("/home")
 		{
 			routerHome.GET("", handler.GetHome)
