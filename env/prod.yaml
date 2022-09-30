@@ -16,19 +16,25 @@ server:
 
 upstream:
   maxblog_fe_admin:
-    host: "0.0.0.0"
+    protocol: "https"
+    domain: "10.192.0.5:9102"
+    host: "10.192.0.5"
     port: 9102
+    secure: true
 
 downstream:
+  maxblog_be_user:
+    host: "10.192.0.5"
+    port: 9301
   maxblog_be_demo:
-    host: "0.0.0.0"
+    host: "10.192.0.5"
     port: 9304
 
 redis:
-  host: "0.0.0.0"
+  host: "10.192.0.5"
   port: 6379
 
 consul:
-  host: "0.0.0.0"
+  host: "10.192.0.5"
   port: 8500
 

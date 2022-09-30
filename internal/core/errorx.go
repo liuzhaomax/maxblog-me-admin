@@ -4,7 +4,7 @@ import "fmt"
 
 // logger.WithFields(logger.Fields{
 //     "失败方法": utils.GetFuncName(),
-// }).Fatal(core.FormatError(902, err).Error())
+// }).Info(core.FormatError(902, err).Error())
 
 // logger.Info(core.FormatInfo(102))
 
@@ -17,10 +17,20 @@ var message = map[int]string{
 	105: "服务中断信号收到",
 	106: "服务启动成功",
 	107: "服务关闭成功",
+	108: "登录成功",
+	109: "登出成功",
 
 	110: "响应发送成功",
 
 	200: "登录权限验证失败",
+	201: "请求信息解析失败",
+	202: "解码失败",
+	203: "TOKEN生成失败",
+	204: "加密失败",
+	205: "用户创建失败",
+	206: "权限认证失败",
+	207: "登出失败",
+	208: "CookieToken获取失败",
 	299: "上游系统未知错误",
 
 	300: "gRPC拨号失败",
@@ -30,6 +40,7 @@ var message = map[int]string{
 	901: "配置文件解析失败",
 	902: "打开日志文件失败",
 	903: "服务启动失败",
+	997: "空指针错误",
 	998: "系统内部错误",
 	999: "未知错误",
 }

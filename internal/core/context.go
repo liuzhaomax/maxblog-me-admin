@@ -1,8 +1,10 @@
 package core
 
 import (
+	"crypto/md5"
 	"crypto/rsa"
 	"fmt"
+	"github.com/anaskhan96/go-password-encoder"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -24,19 +26,21 @@ func GetInstanceOfContext() *Context {
 }
 
 type Context struct {
-	Upstream     Upstream
-	Downstream   Downstream
-	JWTSecret    string
-	PrivateKey   *rsa.PrivateKey
-	PublicKey    *rsa.PublicKey
-	PublicKeyStr string
+	Upstream        Upstream
+	Downstream      Downstream
+	JWTSecret       string
+	PwdEncodingOpts *password.Options
+	PrivateKey      *rsa.PrivateKey
+	PublicKey       *rsa.PublicKey
+	PublicKeyStr    string
 }
 
 type Upstream struct {
-	MaxblogFEAdmin Address
+	MaxblogFEAdmin AddressHttp
 }
 
 type Downstream struct {
+	MaxblogBEUser Address
 	MaxblogBEDemo Address
 }
 
@@ -45,21 +49,31 @@ type Address struct {
 	Port int
 }
 
-func SetUpstreamAddr(host string, port int) {
-	ctx.Upstream.MaxblogFEAdmin.Host = host
-	ctx.Upstream.MaxblogFEAdmin.Port = port
+type AddressHttp struct {
+	Protocol string
+	Domain   string
+	Host     string
+	Port     int
+	Secure   bool
 }
 
 func GetUpstreamAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Upstream.MaxblogFEAdmin.Host, ctx.Upstream.MaxblogFEAdmin.Port)
 }
 
-func SetDownstreamAddr(host string, port int) {
-	ctx.Downstream.MaxblogBEDemo.Host = host
-	ctx.Downstream.MaxblogBEDemo.Port = port
+func GetUpstreamDomain() string {
+	return fmt.Sprintf("%s://%s", ctx.Upstream.MaxblogFEAdmin.Protocol, ctx.Upstream.MaxblogFEAdmin.Domain)
 }
 
-func GetDownstreamMaxblogBETemplateAddr() string {
+func GetUpstreamSecure() bool {
+	return ctx.Upstream.MaxblogFEAdmin.Secure
+}
+
+func GetDownstreamMaxblogBEUserAddr() string {
+	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEUser.Host, ctx.Downstream.MaxblogBEUser.Port)
+}
+
+func GetDownstreamMaxblogBEDemoAddr() string {
 	return fmt.Sprintf("%s:%d", ctx.Downstream.MaxblogBEDemo.Host, ctx.Downstream.MaxblogBEDemo.Port)
 }
 
@@ -72,13 +86,43 @@ func GetProjectPath() string {
 }
 
 func GetPublicKey() *rsa.PublicKey {
-	return GetInstanceOfContext().PublicKey
+	return ctx.PublicKey
 }
 
 func GetPublicKeyStr() string {
-	return GetInstanceOfContext().PublicKeyStr
+	return ctx.PublicKeyStr
 }
 
 func GetPrivateKey() *rsa.PrivateKey {
-	return GetInstanceOfContext().PrivateKey
+	return ctx.PrivateKey
+}
+
+func SetKeys() {
+	prk, puk, _ := GenRsaKeyPair(2048)
+	ctx.PublicKey = puk
+	ctx.PrivateKey = prk
+	publicKeyStr, _ := PublicKeyToString()
+	ctx.PublicKeyStr = publicKeyStr
+}
+
+func SetJWTSecret(jwtSecret string) {
+	ctx.JWTSecret = jwtSecret
+}
+
+func SetPwdEncodingOpts() {
+	ctx.PwdEncodingOpts = &password.Options{
+		SaltLen:      16,
+		Iterations:   64,
+		KeyLen:       16,
+		HashFunction: md5.New,
+	}
+}
+
+func GetEncodedPwd(pwd string) (string, string) {
+	salt, encodedPwd := password.Encode(pwd, ctx.PwdEncodingOpts)
+	return salt, encodedPwd
+}
+
+func VerifyEncodedPwd(pwdHeldRaw string, salt string, pwdTarget string) bool {
+	return password.Verify(pwdHeldRaw, salt, pwdTarget, ctx.PwdEncodingOpts)
 }

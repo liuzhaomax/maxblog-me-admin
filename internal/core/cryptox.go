@@ -10,10 +10,8 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"io"
 	"os"
-	"time"
 )
 
 func MD5(byt []byte) string {
@@ -81,7 +79,7 @@ func GenRsaKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 		Type:  "PUBLIC KEY",
 		Bytes: derPkix,
 	}
-	file, err := os.Create(projPath + "/bin/public.pem")
+	file, err := os.Create(projPath + "/public.pem")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -98,7 +96,7 @@ func GenRsaKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 
 func PublicKeyToString() (string, error) {
 	projPath := GetProjectPath()
-	file, err := os.Open(projPath + "/bin/public.pem")
+	file, err := os.Open(projPath + "/public.pem")
 	if err != nil {
 		return "", err
 	}
@@ -138,26 +136,4 @@ func RSAEncrypt(publicKey *rsa.PublicKey, str string) (string, error) {
 	}
 	encryptedStr := base64.StdEncoding.EncodeToString(encryptedBytes)
 	return encryptedStr, nil
-}
-
-func GenerateToken(text string, duration time.Duration) (string, error) {
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"uid": text,
-		"exp": time.Now().Add(duration).Unix(),
-	})
-	token, err := at.SignedString([]byte(ctx.JWTSecret))
-	if err != nil {
-		return "", err
-	}
-	return token, nil
-}
-
-func ParseToken(token string) (string, error) {
-	claim, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
-		return []byte(ctx.JWTSecret), nil
-	})
-	if err != nil {
-		return "", err
-	}
-	return claim.Claims.(jwt.MapClaims)["uid"].(string), nil
 }

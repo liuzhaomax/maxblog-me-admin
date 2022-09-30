@@ -3,7 +3,6 @@ package core
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"net/http"
 )
 
 var ResponseSet = wire.NewSet(wire.Struct(new(Response), "*"), wire.Bind(new(IResponse), new(*Response)))
@@ -13,13 +12,13 @@ type Response struct {
 }
 
 type IResponse interface {
-	ResSuccess(ctx *gin.Context, funcName string, sth interface{})
+	ResSuccess(ctx *gin.Context, funcName string, code int, sth interface{}) // 可传入用户名，增加日志信息
 	ResFailure(ctx *gin.Context, funcName string, code int, err error)
 }
 
-func (res *Response) ResSuccess(ctx *gin.Context, funcName string, sth interface{}) {
+func (res *Response) ResSuccess(ctx *gin.Context, funcName string, code int, sth interface{}) {
 	res.ILogger.LogSuccess(funcName)
-	res.ResJson(ctx, http.StatusOK, gin.H{
+	res.ResJson(ctx, code, gin.H{
 		"status": gin.H{
 			"code": 0,
 			"desc": "success",

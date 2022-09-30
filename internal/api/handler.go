@@ -3,19 +3,20 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	dataHandler "maxblog-me-admin/src/handler"
+	"maxblog-me-admin/internal/middleware/interceptor"
+	srcHandler "maxblog-me-admin/src/handler"
 )
 
 var APISet = wire.NewSet(wire.Struct(new(Handler), "*"), wire.Bind(new(IHandler), new(*Handler)))
 
 type Handler struct {
-	HandlerData *dataHandler.HData
+	HandlerUser *srcHandler.HUser
 }
 
 type IHandler interface {
-	Register(app *gin.Engine)
+	Register(app *gin.Engine, itcpt *interceptor.Interceptor)
 }
 
-func (handler *Handler) Register(app *gin.Engine) {
-	handler.RegisterRouter(app)
+func (handler *Handler) Register(app *gin.Engine, itcpt *interceptor.Interceptor) {
+	handler.RegisterRouter(app, itcpt)
 }

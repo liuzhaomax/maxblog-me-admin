@@ -1,7 +1,9 @@
 package handler
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+)
 
 var HandlerSet = wire.NewSet(
-	DataSet,
+	UserSet,
 )
