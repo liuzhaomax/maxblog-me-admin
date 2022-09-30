@@ -17,10 +17,16 @@ func (auth *Auth) CheckTokens() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		j := core.NewJWT()
 		// token in req header
-		headerToken := c.Request.Header.Get("Authorization")
-		if headerToken == "" || len(headerToken) == 0 {
+		headerB64Token := c.Request.Header.Get("Authorization")
+		if headerB64Token == "" || len(headerB64Token) == 0 {
 			auth.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, nil))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, nil))
+			return
+		}
+		headerToken, err := core.BASE64DecodeStr(headerB64Token)
+		if err != nil {
+			auth.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
 			return
 		}
 		headerDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), headerToken)
@@ -41,9 +47,15 @@ func (auth *Auth) CheckTokens() gin.HandlerFunc {
 			return
 		}
 		// token in req cookie
-		cookieToken, err := c.Cookie("TOKEN")
-		if cookieToken == "" || len(cookieToken) == 0 {
+		cookieB64Token, err := c.Cookie("TOKEN")
+		if cookieB64Token == "" || len(cookieB64Token) == 0 {
 			auth.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
+			return
+		}
+		cookieToken, err := core.BASE64DecodeStr(cookieB64Token)
+		if err != nil {
+			auth.ILogger.LogFailure(core.GetFuncName(), core.FormatError(206, err))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, core.FormatError(206, err))
 			return
 		}

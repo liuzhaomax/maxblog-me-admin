@@ -14,17 +14,19 @@ func RegisterRouter(handler *handler.HUser, app *gin.Engine, itcpt *interceptor.
 		routerIndex.POST("/login", handler.PostLogin)
 		routerIndex.DELETE("/logout", handler.DeleteLogout)
 	}
-
-	routerHome := app.Group("")
+	routerMaxBlog := app.Group("/maxblog")
 	{
-		routerHome.Use(itcpt.InterceptorAuth.CheckTokens())
-		routerHome.GET("/home", handler.GetHome)
-	}
+		routerMaxBlog.Use(itcpt.InterceptorAuth.CheckTokens())
 
-	routerUser := app.Group("")
-	{
-		routerUser.Use(itcpt.InterceptorAuth.CheckTokens())
-		routerUser.GET("/user/:id", handler.GetUserById)
-		routerUser.POST("/user", handler.PostUser)
+		routerHome := routerMaxBlog.Group("/home")
+		{
+			routerHome.GET("", handler.GetHome)
+		}
+
+		routerUser := routerMaxBlog.Group("/user")
+		{
+			routerUser.GET("/:id", handler.GetUserById)
+			routerUser.POST("", handler.PostUser)
+		}
 	}
 }
