@@ -89,6 +89,7 @@ func (hUser *HUser) DeleteLogout(c *gin.Context) {
 	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": "ok"})
 }
 
+// TODO 使用其他微服务
 func (hUser *HUser) GetHome(c *gin.Context) {
 	hUser.IRes.ResSuccess(c, core.GetFuncName(), http.StatusOK, gin.H{"msg": "ok"})
 }
